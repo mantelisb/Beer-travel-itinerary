@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 
 public class TravelHelper {
 
-    public static Map<Integer, Map<Integer, Double>> findTravelMatrix(List<BeerFactory> closest) {
+    public static Map<Integer, Map<Integer, Double>> findTravelMatrix(List<Map.Entry<Integer, Point2D>> closest) {
         return closest
                 .stream()
-                .collect(Collectors.toMap(BeerFactory::getId, sourceBeerFactory -> closest
+                .collect(Collectors.toMap(Map.Entry::getKey, sourcePoint -> closest
                         .stream()
-                        .filter(targetBeerFactory -> !sourceBeerFactory.getId().equals(targetBeerFactory.getId()))
-                        .collect(Collectors.toMap(BeerFactory::getId, targetBeerFactory -> findDistance(sourceBeerFactory.getCoordinates(), targetBeerFactory.getCoordinates())))));
+                        .filter(targetSource -> !sourcePoint.getKey().equals(targetSource.getKey()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, targetSource -> findDistance(sourcePoint.getValue(), targetSource.getValue())))));
     }
 
     public static double findDistance(Point2D source, Point2D target) {
