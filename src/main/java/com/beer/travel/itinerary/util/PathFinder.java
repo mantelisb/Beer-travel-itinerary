@@ -1,7 +1,6 @@
 package com.beer.travel.itinerary.util;
 
 import java.awt.geom.Point2D;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -40,7 +39,7 @@ public class PathFinder {
 
     private List<Integer> findNext(double rangeLeft, Supplier<Point2D> previousPoint) {
         Map<Integer, Double> distancesFromPreviousPoint = notVisitedPoints.stream().collect(Collectors.toMap(Function.identity(), id -> TravelHelper.findDistance(previousPoint.get(), coordinates.get(id))));
-        Map.Entry<Integer, Double> nextPoint = distancesFromPreviousPoint.entrySet().stream().min(Map.Entry.comparingByValue()).orElseThrow(RuntimeException::new);
+        Map.Entry<Integer, Double> nextPoint = distancesFromPreviousPoint.entrySet().stream().min(Map.Entry.comparingByValue()).orElseThrow();
         notVisitedPoints.remove(nextPoint.getKey());
 
         if (rangeLeft > TravelHelper.findDistance(startingPoint, coordinates.get(nextPoint.getKey()))) {

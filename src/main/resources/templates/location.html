@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Beer travel</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Travel input form</h1>
+<form action="#" th:action="@{/location}" th:object="${travelInputForm}" method="post">
+    <p>Lat: <input type="number" th:field="*{latitude}"/></p>
+    <p>Long: <input type="number" th:field="*{longitude}"/></p>
+    <p>Range with fuel: <input type="number" th:field="*{rangeWithFuel}"/></p>
+    <p><input type="submit" value="Submit"/></p>
+</form>
+
+<table th:if="${visitedFactories != null}">
+    <tbody>
+    <p th:text="|Visited ${visitedFactories.size()}  beer factories:|"></p>
+    <p th:text="|Total distance Traveled: ${distanceTravelled}|"/>
+    <td th:text="|HOME: ${travelInputForm.latitude}, ${travelInputForm.longitude}|"></td>
+
+    <tr th:each="visitedFactory : ${visitedFactories}">
+        <td><span
+                th:text="|[${visitedFactory.id}] ${visitedFactory.name}: ${visitedFactory.coordinates.x}, ${visitedFactory.coordinates.y}|"></span>
+        </td>
+    </tr>
+
+    <td th:text="|HOME: ${travelInputForm.latitude}, ${travelInputForm.longitude}|"></td>
+    </tbody>
+</table>
+
+</body>
+</html>
