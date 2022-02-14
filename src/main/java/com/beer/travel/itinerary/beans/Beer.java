@@ -13,11 +13,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-public class BeerFactory {
+public class Beer {
 
-    private Integer id;
+    private Integer beerFactoryId;
     private String name;
-    private Point2D coordinates;
-    private List<String> beerNames;
-
 }

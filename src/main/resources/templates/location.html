@@ -29,5 +29,19 @@
     </tbody>
 </table>
 
+<table th:if="${collectedBeers != null}">
+    <tbody>
+    <p></p>
+    <tr>
+        <td th:text="|Collected: ${collectedBeers.size()} beer types:|"></td>
+    </tr>
+    <tr th:each="collectedBeer : ${collectedBeers}">
+        <td><span
+                th:text="${collectedBeer}"></span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>

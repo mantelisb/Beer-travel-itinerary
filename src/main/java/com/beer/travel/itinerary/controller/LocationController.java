@@ -45,6 +45,7 @@ public class LocationController {
 
         model.addAttribute("distanceTravelled", traveledDistance);
         model.addAttribute("visitedFactories", visitedFactories);
+        model.addAttribute("collectedBeers", visitedFactories.stream().map(BeerFactory::getBeerNames).flatMap(List::stream).collect(Collectors.toList()));
 
         return "location";
     }
