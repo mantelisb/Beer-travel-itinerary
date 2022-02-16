@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 public class Parser {
 
-    public static Function<BufferedReader, Map<Integer, Point2D>> parseCoordinates() {
+    public static Function<BufferedReader, Map<Integer, Point2D.Double>> parseCoordinates() {
         return parser(
                 splitLine -> new Point2D.Double(Double.parseDouble(splitLine[2]), Double.parseDouble(splitLine[3])),
                 parsedValue -> true,
@@ -28,14 +28,14 @@ public class Parser {
                 0);
     }
 
-    public static Function<BufferedReader, Map<Integer, BeerFactory>> parseBeerFactory(Map<Integer, Point2D> coordinates, Map<Integer, List<String>> beers) {
+    public static Function<BufferedReader, Map<Integer, BeerFactory>> parseBeerFactory(Map<Integer, Point2D.Double> coordinates, Map<Integer, List<String>> beers) {
         return parser(
                 splitLine -> beerFactoryParser(splitLine, coordinates, beers),
                 parsedValue -> parsedValue.getCoordinates() != null,
                 0);
     }
 
-    private static BeerFactory beerFactoryParser(String[] splitLine, Map<Integer, Point2D> coordinates, Map<Integer, List<String>> beers) {
+    private static BeerFactory beerFactoryParser(String[] splitLine, Map<Integer, Point2D.Double> coordinates, Map<Integer, List<String>> beers) {
         Integer id = Integer.valueOf(splitLine[0]);
         return BeerFactory.builder().id(id).name(splitLine[1]).coordinates(coordinates.get(id)).beerNames(beers.get(id)).build();
     }

@@ -1,20 +1,19 @@
 package com.beer.travel.itinerary.beans;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
-import java.awt.geom.Point2D;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Builder
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
+@Entity
 public class Beer {
 
+    @Id
     private Integer beerFactoryId;
     private String name;
 }
