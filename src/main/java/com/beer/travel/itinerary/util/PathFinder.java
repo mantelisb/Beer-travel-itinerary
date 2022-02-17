@@ -38,6 +38,10 @@ public class PathFinder {
     }
 
     private List<Integer> findNext(double rangeLeft, Supplier<Point2D> previousPoint) {
+        if (notVisitedPoints.isEmpty()) {
+            return visitedPoints;
+        }
+
         Map<Integer, Double> distancesFromPreviousPoint = notVisitedPoints.stream().collect(Collectors.toMap(Function.identity(), id -> TravelHelper.findDistance(previousPoint.get(), coordinates.get(id))));
         Map.Entry<Integer, Double> nextPoint = distancesFromPreviousPoint.entrySet().stream().min(Map.Entry.comparingByValue()).orElseThrow();
         notVisitedPoints.remove(nextPoint.getKey());
