@@ -1,12 +1,12 @@
 package com.beer.travel.itinerary.util;
 
 import java.awt.geom.Point2D;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathFinder {
 
@@ -14,17 +14,19 @@ public class PathFinder {
     private final Point2D startingPoint;
     private final double rangeForFuel;
     private final Map<Integer, Point2D> coordinates;
+    private final Optional<BiFunction<Integer, Double,  Double>> efficiencyFunction;
 
-    private List<Integer> notVisitedPoints;
+    private List<Integer> nextPossiblePoints;
 
-    public PathFinder(Point2D startingPoint, double rangeForFuel, Map<Integer, Point2D> coordinates) {
+    public PathFinder(Point2D startingPoint, double rangeForFuel, Map<Integer, Point2D> coordinates, Optional<BiFunction<Integer, Double, Double>> efficiencyFunction) {
         this.startingPoint = startingPoint;
         this.rangeForFuel = rangeForFuel;
         this.coordinates = coordinates;
+        this.efficiencyFunction = efficiencyFunction;
     }
 
     public List<Integer> find() {
-        notVisitedPoints = findReachablePoints();
+        nextPossiblePoints = findReachablePoints();
 
         return findNext(rangeForFuel, () -> startingPoint);
     }
@@ -38,22 +40,38 @@ public class PathFinder {
     }
 
     private List<Integer> findNext(double rangeLeft, Supplier<Point2D> previousPoint) {
-        if (notVisitedPoints.isEmpty()) {
+        if (nextPossiblePoints.isEmpty()) {
             return visitedPoints;
         }
 
-        Map<Integer, Double> distancesFromPreviousPoint = notVisitedPoints.stream().collect(Collectors.toMap(Function.identity(), id -> TravelHelper.findDistance(previousPoint.get(), coordinates.get(id))));
-        Map.Entry<Integer, Double> nextPoint = distancesFromPreviousPoint.entrySet().stream().min(Map.Entry.comparingByValue()).orElseThrow();
-        notVisitedPoints.remove(nextPoint.getKey());
+        Integer nextPoint = findNextPoint(previousPoint.get());
+        nextPossiblePoints.remove(nextPoint);
 
-        if (rangeLeft > TravelHelper.findDistance(startingPoint, coordinates.get(nextPoint.getKey()))) {
-            visitedPoints.push(nextPoint.getKey());
-            return findNext(rangeLeft - nextPoint.getValue(), () -> coordinates.get(nextPoint.getKey()));
+        if (rangeLeft > TravelHelper.findDistance(startingPoint, coordinates.get(nextPoint)) + TravelHelper.findDistance(previousPoint.get(), coordinates.get(nextPoint))) {
+            visitedPoints.push(nextPoint);
+            return findNext(rangeLeft - TravelHelper.findDistance(previousPoint.get(), coordinates.get(nextPoint)), () -> coordinates.get(nextPoint));
         } else {
-            visitedPoints.pop();
-            return visitedPoints;
+            return findNext(rangeLeft, previousPoint);
         }
 
+    }
+
+    private Integer findNextPoint(Point2D previousPoint) {
+        Stream<Map.Entry<Integer, Double>> distancesCost = nextPossiblePoints.stream().collect(Collectors.toMap(Function.identity(), getDistanceCost(previousPoint))).entrySet().stream();
+
+        if (efficiencyFunction.isPresent()) {
+            return distancesCost.max(Comparator.comparingDouble(entry -> Math.abs(efficiencyFunction.get().apply(entry.getKey(), entry.getValue())))).orElseThrow().getKey();
+        } else {
+            return distancesCost.min(Map.Entry.comparingByValue()).orElseThrow().getKey();
+        }
+    }
+
+    private Function<Integer, Double> getDistanceCost(Point2D previousPoint) {
+        return nextPointId -> TravelHelper.findDistance(previousPoint, coordinates.get(nextPointId)) + getDeltaDistanceFromStartingPoint(previousPoint, coordinates.get(nextPointId));
+    }
+
+    private double getDeltaDistanceFromStartingPoint(Point2D previousPoint, Point2D nextPoint) {
+        return TravelHelper.findDistance(startingPoint, nextPoint) - TravelHelper.findDistance(startingPoint, previousPoint);
     }
 
 }

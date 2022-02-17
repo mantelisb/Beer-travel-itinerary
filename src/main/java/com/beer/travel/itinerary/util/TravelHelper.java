@@ -14,14 +14,18 @@ public class TravelHelper {
     }
 
     public static double findTraveledDistance(Point2D startingPoint, List<Point2D> travelPath) {
-        double traveled = 0;
-        traveled += TravelHelper.findDistance(startingPoint, travelPath.get(0));
-
-        for (int i = 1; i < travelPath.size(); i++) {
-            traveled += TravelHelper.findDistance(travelPath.get(i - 1), travelPath.get(i));
+        if (travelPath.isEmpty()) {
+            return 0;
         }
 
-        traveled += TravelHelper.findDistance(startingPoint, travelPath.get(travelPath.size() - 1));
+        double traveled = 0;
+        traveled += findDistance(startingPoint, travelPath.get(0));
+
+        for (int i = 1; i < travelPath.size(); i++) {
+            traveled += findDistance(travelPath.get(i - 1), travelPath.get(i));
+        }
+
+        traveled += findDistance(startingPoint, travelPath.get(travelPath.size() - 1));
         return traveled;
     }
 

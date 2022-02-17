@@ -39,6 +39,8 @@ public class LocationController {
 
     @PostMapping
     public String findRoute(@ModelAttribute TravelInputForm travelInputForm, Model model) {
+        long start = System.currentTimeMillis();
+
         Point2D.Double startingPoint = new Point2D.Double(travelInputForm.getLatitude(), travelInputForm.getLongitude());
         List<BeerFactory> visitedFactories = service.findRoute(startingPoint, travelInputForm.getRangeWithFuel());
         double traveledDistance = TravelHelper.findTraveledDistance(startingPoint, visitedFactories.stream().map(BeerFactory::getCoordinates).collect(Collectors.toList()));
@@ -46,6 +48,9 @@ public class LocationController {
         model.addAttribute("distanceTravelled", traveledDistance);
         model.addAttribute("visitedFactories", visitedFactories);
         model.addAttribute("collectedBeers", visitedFactories.stream().map(BeerFactory::getBeerNames).flatMap(List::stream).collect(Collectors.toList()));
+
+        long finish = System.currentTimeMillis();
+        model.addAttribute("timeElapsed", finish - start);
 
         return "location";
     }

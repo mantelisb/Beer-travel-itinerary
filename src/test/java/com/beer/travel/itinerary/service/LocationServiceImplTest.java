@@ -19,7 +19,7 @@ public class LocationServiceImplTest {
     private static final int DEFAULT_RANGE = 2000;
     private final Point2D.Double initialCoordinates = new Point2D.Double(0, 0);
 
-    private final BeerFactory beerFactoryInRange = BeerFactory.builder().id(1).coordinates(new Point2D.Double(1, 1)).build();
+    private final BeerFactory beerFactoryInRange = BeerFactory.builder().id(1).coordinates(new Point2D.Double(1, 1)).beerNames(List.of()).build();
 
     @Mock
     private BeerFactoryService beerFactoryService;

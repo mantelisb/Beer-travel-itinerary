@@ -7,13 +7,16 @@
 <body>
 <h1>Travel input form</h1>
 <form action="#" th:action="@{/location}" th:object="${travelInputForm}" method="post">
-    <p>Lat: <input type="number" th:field="*{latitude}"/></p>
-    <p>Long: <input type="number" th:field="*{longitude}"/></p>
-    <p>Range with fuel: <input type="number" th:field="*{rangeWithFuel}"/></p>
+    <p>Lat: <input type="number" step=any th:field="*{latitude}"/></p>
+    <p>Long: <input type="number" step=any th:field="*{longitude}"/></p>
+    <p>Range with fuel: <input type="number" step=any th:field="*{rangeWithFuel}"/></p>
     <p><input type="submit" value="Submit"/></p>
 </form>
 
-<table th:if="${visitedFactories != null}">
+<p th:if="${timeElapsed != null}" th:text="|Program took: ${timeElapsed} ms|"/>
+<p th:if="${visitedFactories != null && visitedFactories.size() == 0}" th:text="|No factory can be travelled with fuel left|"/>
+
+<table th:if="${visitedFactories != null && visitedFactories.size() > 0}">
     <tbody>
     <p th:text="|Visited ${visitedFactories.size()}  beer factories:|"></p>
     <p th:text="|Total distance Traveled: ${distanceTravelled}|"/>
@@ -29,7 +32,7 @@
     </tbody>
 </table>
 
-<table th:if="${collectedBeers != null}">
+<table th:if="${collectedBeers != null && collectedBeers.size() > 0}">
     <tbody>
     <p></p>
     <tr>
