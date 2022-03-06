@@ -1,6 +1,5 @@
 package com.beer.travel.itinerary.repository;
 
-import com.beer.travel.itinerary.beans.Beer;
 import com.beer.travel.itinerary.beans.BeerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 

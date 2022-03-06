@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PathFinderTest {
 
-    public static final Optional<BiFunction<Integer, Double, Double>> EFFICIENCY_FUNCTION = Optional.of((id, distance) -> id * distance);
+    private static final Optional<BiFunction<Integer, Double, Double>> EFFICIENCY_FUNCTION = Optional.of((id, distance) -> id * distance);
     private final Point2D startingPoint = new Point2D.Double(1, 1);
     private final double rangeForFuel = 2000;
     private final Map<Integer, Point2D> coordinates = Map.of(
@@ -27,8 +27,6 @@ public class PathFinderTest {
             16, new Point2D.Double(2.2, -2.2222),
             17, new Point2D.Double(-1.1111, -2.222),
             18, new Point2D.Double(1.1, 2.2));
-
-    private List<Integer> notVisitedPoints;
 
     @Test
     public void shouldReturnEmptyPath_ifCoordinatesNotProvided_withoutEfficiency() {

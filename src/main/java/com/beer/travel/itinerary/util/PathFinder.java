@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,9 +35,13 @@ public class PathFinder {
     private List<Integer> findReachablePoints() {
         return coordinates.entrySet()
                 .stream()
-                .filter(coordinateEntry -> TravelHelper.findDistance(startingPoint, coordinateEntry.getValue()) < rangeForFuel / 2)
+                .filter(doesPointReachable())
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+    }
+
+    private Predicate<Map.Entry<Integer, Point2D>> doesPointReachable() {
+        return coordinateEntry -> TravelHelper.findDistance(startingPoint, coordinateEntry.getValue()) < rangeForFuel / 2;
     }
 
     private List<Integer> findNext(double rangeLeft, Supplier<Point2D> previousPoint) {
@@ -47,13 +52,17 @@ public class PathFinder {
         Integer nextPoint = findNextPoint(previousPoint.get());
         nextPossiblePoints.remove(nextPoint);
 
-        if (rangeLeft > TravelHelper.findDistance(startingPoint, coordinates.get(nextPoint)) + TravelHelper.findDistance(previousPoint.get(), coordinates.get(nextPoint))) {
+        if (rangeLeft > calculateMinimumRequiredFuelToVisitNextPoint(previousPoint, nextPoint)) {
             visitedPoints.push(nextPoint);
             return findNext(rangeLeft - TravelHelper.findDistance(previousPoint.get(), coordinates.get(nextPoint)), () -> coordinates.get(nextPoint));
         } else {
             return findNext(rangeLeft, previousPoint);
         }
 
+    }
+
+    private double calculateMinimumRequiredFuelToVisitNextPoint(Supplier<Point2D> previousPoint, Integer nextPoint) {
+        return TravelHelper.findDistance(startingPoint, coordinates.get(nextPoint)) + TravelHelper.findDistance(previousPoint.get(), coordinates.get(nextPoint));
     }
 
     private Integer findNextPoint(Point2D previousPoint) {

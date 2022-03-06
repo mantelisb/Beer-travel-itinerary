@@ -37,10 +37,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     private List<BeerFactory> findFactoriesEfficiently(Point2D.Double startingPoint, double rangeWithFuel, Map<Integer, BeerFactory> beerFactories) {
-        return findFactories(startingPoint, rangeWithFuel, beerFactories, Optional.of((id, distance) -> beerFactories.get(id).getBeerNames().size() / distance));
+        return findFactories(startingPoint, rangeWithFuel, beerFactories, Optional.of(collectedBeerTypesPerKilometer(beerFactories)));
     }
 
-    private List<BeerFactory> findFactories(Point2D.Double startingPoint, double rangeWithFuel, Map<Integer, BeerFactory> beerFactories, Optional<BiFunction<Integer, Double, Double>> efficiencyFunction) {
+    private BiFunction<Integer, Double, Double> collectedBeerTypesPerKilometer(Map<Integer, BeerFactory> beerFactories) {
+        return (id, distance) -> beerFactories.get(id).getBeerNames().size() / distance;
+    }
+
+    List<BeerFactory> findFactories(Point2D.Double startingPoint, double rangeWithFuel, Map<Integer, BeerFactory> beerFactories, Optional<BiFunction<Integer, Double, Double>> efficiencyFunction) {
         return new PathFinder(
                 startingPoint,
                 rangeWithFuel,

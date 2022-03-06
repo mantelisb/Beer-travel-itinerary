@@ -8,9 +8,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BeerParserTest {
 
-    public static final Integer BEER_FACTORY_ID = 2;
-    public static final String BEER_NAME = "EXTRA";
-    public static final String[] SPLIT_LINE = {"1", BEER_FACTORY_ID.toString(), BEER_NAME};
+    private static final Integer BEER_FACTORY_ID = 2;
+    private static final String BEER_NAME = "EXTRA";
+    private static final String[] SPLIT_LINE = {"1", BEER_FACTORY_ID.toString(), BEER_NAME};
     private final BeerParser beerParser = new BeerParser();
 
     @Test

@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CoordinatesParserTest {
 
-    public static final Double LATITUDE = 20d;
-    public static final Double LONGITUDE = 10d;
-    public static final String[] SPLIT_LINE = {"1", "2", LATITUDE.toString(), LONGITUDE.toString()};
+    private static final Double LATITUDE = 20d;
+    private static final Double LONGITUDE = 10d;
+    private static final String[] SPLIT_LINE = {"1", "2", LATITUDE.toString(), LONGITUDE.toString()};
     private final CoordinatesParser coordinatesParser = new CoordinatesParser();
 
 
